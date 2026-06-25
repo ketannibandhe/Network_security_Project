@@ -1,0 +1,351 @@
+The .github/workflows/main.yml file is used by GitHub Actions 
+to automate tasks 
+whenever certain events happen in your repository.
+
+Why do we need it?
+
+Without main.yml, you would have to manually:
+
+Run tests
+Build your project
+Create Docker images
+Deploy your application
+Check code quality
+
+With GitHub Actions, GitHub does these automatically.
+
+Since you're building ML projects now, Pipeline is one of the most important concepts to understand. It becomes crucial when you move from a Jupyter notebook to a real ML application.
+
+What is a Pipeline?
+
+A pipeline is a sequence of steps that process data and train/predict using a model automatically.
+
+Instead of doing:
+
+data
+ ↓
+fill missing values
+ ↓
+encode categorical columns
+ ↓
+scale features
+ ↓
+train model
+
+one step at a time manually, a Pipeline combines everything into a single object.
+
+Real-world Analogy
+
+Imagine making tea:
+
+Water
+ ↓
+Boil Water
+ ↓
+Add Tea Leaves
+ ↓
+Add Milk
+ ↓
+Serve Tea
+
+This entire process is a pipeline.
+
+Similarly in ML:
+
+Raw Data
+ ↓
+Handle Missing Values
+ ↓
+Encode Categories
+ ↓
+Scale Features
+ ↓
+Train Model
+ ↓
+Prediction
+Why Do We Need Pipelines?
+
+Suppose you're predicting house prices.
+
+Training data:
+
+City	Area	Price
+Pune	1200	50L
+Mumbai	1000	80L
+
+You do:
+
+1. Label Encoding
+2. Scaling
+3. Model Training
+
+Now after deployment, a user enters:
+
+City = Pune
+Area = 1500
+
+If you forget to apply the same encoding and scaling used during training, predictions will be wrong.
+
+Pipeline guarantees:
+
+The exact same preprocessing used during training is automatically applied during prediction.
+
+Without Pipeline
+df = encode(df)
+df = scale(df)
+
+model.fit(df,y)
+
+Prediction:
+
+new_data = encode(new_data)
+new_data = scale(new_data)
+
+model.predict(new_data)
+
+You must remember every step.
+
+Easy to make mistakes.
+
+With Pipeline
+pipeline.fit(X_train,y_train)
+
+prediction = pipeline.predict(new_data)
+
+Pipeline automatically:
+
+new_data
+ ↓
+encoding
+ ↓
+scaling
+ ↓
+prediction
+Scikit-Learn Pipeline
+
+Example:
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('model', LinearRegression())
+])
+
+pipe.fit(X_train,y_train)
+
+Prediction:
+
+pipe.predict(X_test)
+
+Scaling happens automatically.
+
+Use Case in Your Student Performance Project
+
+Your project likely has:
+
+Gender
+Race
+Parental Education
+Lunch
+Reading Score
+Writing Score
+
+Before training:
+
+Missing Values
+ ↓
+One-Hot Encoding
+ ↓
+Scaling
+ ↓
+Model
+
+A pipeline can store all these steps.
+
+preprocessor
+ ↓
+model
+
+When a user fills the web form:
+
+Student Details
+ ↓
+Pipeline
+ ↓
+Prediction
+
+Everything is automatic.
+
+ColumnTransformer + Pipeline
+
+Real datasets have:
+
+Numerical Columns
+math_score
+reading_score
+writing_score
+
+Need:
+
+Scaling
+Categorical Columns
+gender
+lunch
+race
+
+Need:
+
+OneHotEncoding
+
+We combine them:
+
+ColumnTransformer
+
+Example:
+
+preprocessor = ColumnTransformer(
+[
+ ('num', StandardScaler(), numerical_cols),
+ ('cat', OneHotEncoder(), categorical_cols)
+]
+)
+
+Then:
+
+pipeline = Pipeline([
+    ('preprocessor', preprocessor),
+    ('model', RandomForestRegressor())
+])
+What Happens During Training?
+Raw Data
+ ↓
+ColumnTransformer
+ ↓
+Encoding
+ ↓
+Scaling
+ ↓
+Random Forest
+ ↓
+Trained Model
+What Happens During Prediction?
+
+User enters:
+
+Male
+Bachelor Degree
+Lunch = Standard
+
+Pipeline does:
+
+Input
+ ↓
+Encoding
+ ↓
+Scaling
+ ↓
+Random Forest
+ ↓
+Predicted Score
+
+No manual work.
+
+Pipeline in Production
+
+In a Flask application:
+
+pipeline = load_object("model.pkl")
+
+prediction = pipeline.predict(features)
+
+You don't write:
+
+encode()
+scale()
+transform()
+
+Pipeline already contains everything.
+
+Saving a Pipeline
+
+Instead of saving:
+
+encoder.pkl
+scaler.pkl
+model.pkl
+
+Save one object:
+
+pipeline.pkl
+import pickle
+
+pickle.dump(pipeline, open('model.pkl','wb'))
+
+Later:
+
+pipeline = pickle.load(open('model.pkl','rb'))
+Benefits
+1. No Data Leakage
+
+Cross-validation applies preprocessing correctly.
+
+2. Cleaner Code
+
+Instead of:
+
+encode()
+scale()
+impute()
+model()
+
+everything is in one object.
+
+3. Easier Deployment
+
+Only one file:
+
+model.pkl
+4. Reproducibility
+
+Training and prediction use identical preprocessing.
+
+5. Industry Standard
+
+Most production ML systems use pipelines.
+
+Interview Definition
+
+A Machine Learning Pipeline is a sequence of data preprocessing and 
+model training steps combined into a single workflow. 
+It ensures that the same transformations applied during training 
+are automatically applied during prediction, making models reliable, 
+reproducible, and easier to deploy.
+
+For your current ML learning journey, focus on understanding this flow:
+
+Raw Data
+ ↓
+Train-Test Split
+ ↓
+Pipeline
+    ↓
+    Missing Value Handling
+    ↓
+    Encoding
+    ↓
+    Scaling
+    ↓
+    Model Training
+ ↓
+Save Pipeline
+ ↓
+Flask App
+ ↓
+Prediction
+
+Once you understand this, you'll see why almost every professional 
+ML project has files like data_transformation.py, model_trainer.py, 
+and a saved pipeline.pkl.
