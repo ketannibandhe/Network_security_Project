@@ -1,1 +1,1 @@
-### Netwro security project for phising data
+### Netwrork security project for phising data
