@@ -8,6 +8,7 @@ from Networksecurity.logging import logger
 
 # Creating our own custom exception class
 # Exception is the parent class of all Python errors
+
 class NetworkSecurityException(Exception):
 
     # Constructor

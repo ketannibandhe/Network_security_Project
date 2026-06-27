@@ -1,5 +1,6 @@
 python-dotenv
-pandas
-numpy
-pymongo
+numpy==1.26.4
+pandas==2.2.3
+pymongo==4.17.0
 certifi
+scikit-learn==1.5.2

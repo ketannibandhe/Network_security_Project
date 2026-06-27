@@ -4,10 +4,11 @@ Version: 0.0.1
 Author: Ketan Nibandhe
 Author-email: nibandheketan2354@gmail.com
 Requires-Dist: python-dotenv
-Requires-Dist: pandas
-Requires-Dist: numpy
-Requires-Dist: pymongo
+Requires-Dist: numpy==1.26.4
+Requires-Dist: pandas==2.2.3
+Requires-Dist: pymongo==4.17.0
 Requires-Dist: certifi
+Requires-Dist: scikit-learn==1.5.2
 Dynamic: author
 Dynamic: author-email
 Dynamic: requires-dist
