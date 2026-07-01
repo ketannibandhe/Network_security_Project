@@ -9,6 +9,8 @@ Requires-Dist: pandas==2.2.3
 Requires-Dist: pymongo==4.17.0
 Requires-Dist: certifi
 Requires-Dist: scikit-learn==1.5.2
+Requires-Dist: dill
+Requires-Dist: pyaml
 Dynamic: author
 Dynamic: author-email
 Dynamic: requires-dist
